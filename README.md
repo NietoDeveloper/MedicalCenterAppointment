@@ -21,7 +21,7 @@ This project is a full-stack web application built using the MERN stack (MongoDB
 
 ## Installation and Setup:
 
-1. Clone the repository: git clone https://github.com/md0011/Doctor-Appointment-System
+1. Clone the repository: git clone https://github.com/NietoDeveloper/AppointmentDoctor
 2. Install dependencies: npm install or yarn install
 3. Create a .env file in the root directory and set environment variables for database connection, authentication, and other configurations.
 4. Start the development server: npm start or yarn start
