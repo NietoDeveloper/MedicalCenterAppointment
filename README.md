@@ -1,33 +1,29 @@
-# Doctor-Appointment-System using MERN stack
+# Doctor Appointment System
 
-This project is a full-stack web application built using the MERN stack (MongoDB, Express.js, React.js, and Node.js) to provide a user-friendly and efficient system for managing doctor appointments. Patients can search for doctors by specialty, location, or availability, book appointments, view their appointment history, and manage their profile information. Doctors can manage their schedules, view patient information, and update appointment statuses.
+## Overview
 
-## Key Features:
+This project is a Doctor Appointment System built with React, Express.js, and MongoDB. It includes features for managing doctors, appointments, calendars, and user authentication.
 
-- Patient registration and profile management
-- Doctor registration and profile management
-- Appointment search and booking
-- Appointment cancellation and rescheduling
-- Appointment history and notifications
-- Secure authentication and authorization
-- Responsive and user-friendly design
+## Features
 
-## Technologies:
+- User Authentication (Login, Register, Forgot Password)
+- Manage Doctors (Add, Edit, List)
+- Manage Appointments (Add, Edit, List)
+- Manage Calendars (Add, Edit, List)
+- Navigation bar with links to different sections
 
-- Front-end: React.js
-- Back-end: Express.js, Node.js
-- Database: MongoDB
-- Other dependencies: Axios, Redux, Moment, Ant Design, Bootstrap
+## Getting Started
 
-## Installation and Setup:
+### Prerequisites
 
-1. Clone the repository: git clone https://github.com/NietoDeveloper/AppointmentDoctor
-2. Install dependencies: npm install or yarn install
-3. Create a .env file in the root directory and set environment variables for database connection, authentication, and other configurations.
-4. Start the development server: npm start or yarn start
+- Node.js and npm (Node Package Manager) installed on your machine.
+- MongoDB server running or a cloud MongoDB instance.
+- Git for version control.
 
-## Usage:
+### Installation
 
-1. Open the application in your web browser (usually at http://localhost:3000).
-2. Register as a patient or doctor (or use existing accounts if available).
-3. Explore the features and functionality as needed.
+1. **Clone the Repository**
+
+   ```bash
+   git clone https://github.com/yourusername/doctor-appointment-system.git
+   cd doctor-appointment-system
