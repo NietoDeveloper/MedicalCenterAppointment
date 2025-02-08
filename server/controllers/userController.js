@@ -1,223 +1,151 @@
-const User = require("../models/userModel");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const Doctor = require("../models/doctorModel");
-const Appointment = require("../models/appointmentModel");
-const nodemailer = require("nodemailer"); 
-require("dotenv").config();
+const asyncHandler = require('express-async-handler');
+const User = require('../models/User');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
-const getuser = async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id).select("-password");
-    return res.send(user);
-  } catch (error) {
-    res.status(500).send("Unable to get user");
+const userRegister = asyncHandler(async (req, res) => {
+  const { name, email, password, photo} = req.body;
+  if (!name || !email || !password)
+    return res.status(400).json({ message: 'all credentials are required' });
+
+  const userexist = await User.findOne({ email });
+  if (userexist) return res.status(409).json({ message: 'User already exists! login instead' });
+
+  const hashedpassword = bcrypt.hashSync(password, 10);
+  //store the user details in the database
+  const result = await User.create({
+    name,
+    email,
+    photo,
+    password: hashedpassword,
+  });
+  console.log(result);
+
+  if (result) {
+    res.status(201).json({
+      message: 'User created successfully',
+      user: {
+        id: result._id,
+        name: result.name,
+        email: result.email,
+        photo: result.photo,
+      }, });
+  } else return res.status(500).json({ message: 'Something went wrong' });
+});
+
+
+
+const userLogin = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Login credentials required!' });
   }
-};
 
-const getallusers = async (req, res) => {
-  try {
-    const users = await User.find()
-      .find({ _id: { $ne: req.locals } })
-      .select("-password");
-    return res.send(users);
-  } catch (error) {
-    res.status(500).send("Unable to get all users");
+  // Find user by email and exclude password and refreshToken fields
+  const foundUser = await User.findOne({ email }).select('+password').exec();
+
+  // If user not found
+  if (!foundUser) {
+    return res.status(401).json({ message: 'Unauthorized' });
   }
-};
 
-const login = async (req, res) => {
-  try {
-    const emailPresent = await User.findOne({ email: req.body.email });
-    if (!emailPresent) {
-      return res.status(400).send("Incorrect credentials");
-    }
-    if(emailPresent.role != req.body.role){
-      return res.status(404).send("Role does not exist");
-    }
-    const verifyPass = await bcrypt.compare(
-      req.body.password,
-      emailPresent.password
+  // Compare password
+  const isMatch = await bcrypt.compare(password, foundUser.password);
+
+  if (isMatch) {
+    // Create access token
+    const accessToken = jwt.sign(
+      { id: foundUser._id, email: foundUser.email },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: '1h' }
     );
-    if (!verifyPass) {
-      return res.status(400).send("Incorrect credentials");
-    }
-    const token = jwt.sign(
-      { userId: emailPresent._id, isAdmin: emailPresent.isAdmin, role:emailPresent.role },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "2 days",
-      }
+
+    // Create refresh token
+    const refreshToken = jwt.sign(
+      { id: foundUser._id },
+      process.env.REFRESH_TOKEN_SECRET,
+      { expiresIn: '1d' }
     );
-    return res.status(201).send({ msg: "User logged in successfully", token });
-  } catch (error) {
-    res.status(500).send("Unable to login user");
-  }
-};
 
-const register = async (req, res) => {
-  try {
-    const emailPresent = await User.findOne({ email: req.body.email });
-    if (emailPresent) {
-      return res.status(400).send("Email already exists");
-    }
-    const hashedPass = await bcrypt.hash(req.body.password, 10);
-    const user = await User({ ...req.body, password: hashedPass });
-    const result = await user.save();
-    if (!result) {
-      return res.status(500).send("Unable to register user");
-    }
-    return res.status(201).send("User registered successfully");
-  } catch (error) {
-    res.status(500).send("Unable to register user");
-  }
-};
+    // Save refresh token with the user
+    foundUser.refreshToken = refreshToken;
+    await foundUser.save();
 
-const updateprofile = async (req, res) => {
-  try {
-    const hashedPass = await bcrypt.hash(req.body.password, 10);
-    const result = await User.findByIdAndUpdate(
-      { _id: req.locals },
-      { ...req.body, password: hashedPass }
-    );
-    if (!result) {
-      return res.status(500).send("Unable to update user");
-    }
-    return res.status(201).send("User updated successfully");
-  } catch (error) {
-    res.status(500).send("Unable to update user");
-  }
-};
-const changepassword = async (req, res) => {
-  try {
-    console.log(req.body);
-    const { userId, currentPassword, newPassword, confirmNewPassword } = req.body;
-    // console.log("Received newPassword:", newPassword); 
-    if (newPassword !== confirmNewPassword) {
-      return res.status(400).send("Passwords do not match");
-    }
+    // Exclude password and refreshToken fields from user data
+    const userData = await User.findById(foundUser._id).select('-password -refreshToken -email');
 
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).send("User not found");
-    }
-
-    const isPasswordMatch = await bcrypt.compare(currentPassword, user.password);
-    if (!isPasswordMatch) {
-      return res.status(400).send("Incorrect current password");
-    }
-
-    const saltRounds = 10;
-    // console.log("Using saltRounds:", saltRounds); 
-
-    const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
-    // console.log("Hashed new password:", hashedNewPassword); 
-
-    user.password = hashedNewPassword;
-    await user.save();
-
-    return res.status(200).send("Password changed successfully");
-  } catch (error) {
-    console.error(error);
-    return res.status(500).send("Internal Server Error");
-  }
-};
-
-
-
-const deleteuser = async (req, res) => {
-  try {
-    const result = await User.findByIdAndDelete(req.body.userId);
-    const removeDoc = await Doctor.findOneAndDelete({
-      userId: req.body.userId,
+    // Set refresh token as a cookie
+    res.cookie('jwt', refreshToken, {
+      httpOnly: true,
+      sameSite:"None",
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
-    const removeAppoint = await Appointment.findOneAndDelete({
-      userId: req.body.userId,
-    });
-    return res.send("User deleted successfully");
-  } catch (error) {
-    res.status(500).send("Unable to delete user");
+
+    // Send access token and user data to be used on the client side
+    res.status(200).json({ accessToken, userData, message: 'Login successful' });
+  } else {
+    res.status(400).json({ message: 'Invalid credentials' });
   }
-};
+});
 
-const forgotpassword = async (req, res) => {
-  try {
-    const { email } = req.body;
-    const user = await User.findOne({ email });
-    // console.log(user,email);
-    if (!user) {
-      return res.status(404).send({ status: "User not found" });
-    }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1m" });
-// console.log(token)
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: "tarun.kumar.csbs25@heritageit.edu.in",
-        pass: "qfhv wohg gjtf ikvz", 
-      },
-    });
-    // console.log(transporter);
 
-    const mailOptions = {
-      from: "tarun.kumar.csbs25@heritageit.edu.in",
-      to: email,
-      subject: "Reset Password Link",
-      text: `https://appointmentdoctor.netlify.app/resetpassword/${user._id}/${token}`,
-    };
-    // console.log(mailOptions);
 
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.log(error);
-        return res.status(500).send({ status: "Error sending email" });
-      } else {
-        return res.status(200).send({ status: "Email sent successfully" });
-      }
-    });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).send({ status: "Internal Server Error" });
+const updateUserDetails = asyncHandler(async (req, res) => {
+  if (!req?.params?.id)
+    return res.status(400).json({ message: 'User id required!' });
+
+  const foundUser = await User.findOne({ _id: req.params.id }).exec();
+  if (!foundUser) {
+    return res.status(204).json({ message: 'No user with that ID was found' })
+   };
+  const { name, email, password, bloodType, gender, phone, photo } = req.body;
+  if (name) foundUser.name = name;
+  if (email) foundUser.email = email;
+  if (password) foundUser.password = await bcrypt.hash(password, 10);
+  if (bloodType) foundUser.bloodType = bloodType;
+  if (gender) foundUser.gender = gender;
+  if (phone) foundUser.phone = phone;
+  if (photo) foundUser.photo = photo;
+
+  await foundUser.save();
+  res.status(200).json({ message: 'User details updated successfully!' });
+});
+
+
+const handleUserLogout = asyncHandler(async (req, res) => {
+  console.log('Logout request received');
+  const cookies = req.cookies;
+  if (!cookies?.jwt) {
+    console.log('No JWT cookie found');
+    return res.sendStatus(204); // No content
   }
-};
-
-const resetpassword = async (req, res) => {
-  try {
-    const { id, token } = req.params;
-    const { password } = req.body;
-    // console.log(token)
-    // console.log(password);
-    jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
-      if (err) {
-        console.log(err);
-        return res.status(400).send({ error: "Invalid or expired token" });
-      }
-     
-      try {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        await User.findByIdAndUpdate(id, { password: hashedPassword });
-        return res.status(200).send({ success: "Password reset successfully" });
-      } catch (updateError) {
-        console.error("Error updating password:", updateError);
-        return res.status(500).send({ error: "Failed to update password" });
-      }
-    });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).send({ error: "Internal Server Error" });
+  
+  const refreshToken = cookies.jwt;
+  console.log('Refresh token:', refreshToken);
+  
+  // Check if the refresh token is in the database
+  const foundUser = await User.findOne({ refreshToken }).exec();
+  if (!foundUser) {
+    console.log('User not found in database');
+    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None' });
+    return res.sendStatus(204);
   }
-};
+
+  // Delete the refresh token from the database
+  foundUser.refreshToken = foundUser.refreshToken.filter(token => token !== refreshToken);
+  const result = await foundUser.save();
+  console.log('User updated:', result);
+
+  // Clear the refresh token cookie
+  res.clearCookie('jwt', { httpOnly: true, sameSite: 'None' });
+  res.sendStatus(204);
+});
 
 
-module.exports = {
-  getuser,
-  getallusers,
-  login,
-  register,
-  updateprofile,
-  deleteuser,
-  changepassword,
-  forgotpassword,
-  resetpassword,
-};
+
+
+
+
+module.exports = { userRegister, userLogin, updateUserDetails, handleUserLogout};

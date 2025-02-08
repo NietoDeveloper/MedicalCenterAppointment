@@ -1,126 +1,130 @@
-const Doctor = require("../models/doctorModel");
-const User = require("../models/userModel");
-const Notification = require("../models/notificationModel");
-const Appointment = require("../models/appointmentModel");
+const asyncHandler = require('express-async-handler');
+const Doctor = require('../models/Doctor')
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
-const getalldoctors = async (req, res) => {
-  try {
-    let docs;
-    if (!req.locals) {
-      docs = await Doctor.find({ isDoctor: true }).populate("userId");
+const doctorRegister = asyncHandler (async (req, res) => {
+    const {name, email, password} = req.body;
+    if(!name || !email || !password) return res.status(400).json({message:"Name, password and email are required!"});
+
+    //check for duplicates
+    const duplicate = await Doctor.findOne({email}).exec();
+    if(duplicate) return res.sendStatus(409);
+
+    const hashedpassword = await bcrypt.hash(password, 10);
+    const result = await Doctor.create({
+        name, 
+        email,
+        password:hashedpassword
+    });
+
+    if(result) {
+        res.status(201).json({message:"Your doctor's profile was create successfully"})
     } else {
-      docs = await Doctor.find({ isDoctor: true })
-        .find({
-          _id: { $ne: req.locals },
-        })
-        .populate("userId");
+        res.sendStatus(500).json({message:"Internal server error"})
     }
 
-    return res.send(docs);
-  } catch (error) {
-    res.status(500).send("Unable to get doctors");
-  }
-};
+});
 
-const getnotdoctors = async (req, res) => {
-  try {
-    const docs = await Doctor.find({ isDoctor: false })
-      .find({
-        _id: { $ne: req.locals },
-      })
-      .populate("userId");
+const handleDoctorLogin = asyncHandler (async (req, res) => {
+    const {email, password} = req.body;
+    if(!email || !password) return res.status(400).json({message:"Login credentials required"});
 
-    return res.send(docs);
-  } catch (error) {
-    res.status(500).send("Unable to get non doctors");
-  }
-};
+    const findDoctor = await Doctor.findOne({email}).exec();
+    if(!findDoctor) return res.sendStatus(401).json({message:"Unauthorized!"});
 
-const applyfordoctor = async (req, res) => {
-  try {
-    const alreadyFound = await Doctor.findOne({ userId: req.locals });
-    if (alreadyFound) {
-      return res.status(400).send("Application already exists");
+    const isMatch = await bcrypt.compare(password, findDoctor.password);
+    if(isMatch) {
+        const roles = Object.values(findDoctor.roles).filter(Boolean)
+        const accessToken = jwt.sign (
+            {id: findDoctor._id, roles:roles},
+            process.env.ACCESS_TOKEN_SECRET,
+            {expiresIn:'1h'}
+        );
+
+        const refreshToken = jwt.sign(
+            {id:findDoctor._id},
+            process.env.REFRESH_TOKEN_SECRET,
+            {expiresIn:'1d'}
+        )
+        findDoctor.refreshToken = refreshToken;
+        await findDoctor.save();
+
+        const doctorData = await Doctor.findById(findDoctor._id).select('-password -refreshToken -email')
+        res.cookie('jwt', refreshToken, {httpOnly:true, sameSite:'none', maxAge:24 * 60 * 60 * 100});
+        res.json({accessToken, roles, doctorData});
+    } else {
+        res.status(401)
+    }
+});
+
+const updateDoctor = asyncHandler (async (req, res) => {
+    const doctorId = req.params.id;
+    if(!doctorId) return res.status(400).json({message:"ID required"});
+    
+    const foundDoctor = await Doctor.findById(doctorId).exec();
+    if(!foundDoctor) {
+        return res.status(204).json({message:"Doctor not found"})
     }
 
-    const doctor = Doctor({ ...req.body.formDetails, userId: req.locals });
-    const result = await doctor.save();
+    const {email, phone, specialization, qualifications, experience, bio, timeSlots} = req.body;
+    if (email) foundDoctor.email = email;
+    if (phone) foundDoctor.phone = phone;
+    if (specialization) foundDoctor.specialization = specialization;
+    if (qualifications) foundDoctor.qualifications = qualifications;
+    if (bio) foundDoctor.bio = bio;
+    if (experience) foundDoctor.experience = experience;
+    if (timeSlots) foundDoctor.timeSlots = timeSlots;
 
-    return res.status(201).send("Application submitted successfully");
-  } catch (error) {
-    res.status(500).send("Unable to submit application");
-  }
-};
+    const result = await foundDoctor.save();
+    console.log(result)
+    if(result) {
+        return res.status(200).json({message:"Doctor's infor updated successfully!"})
+    } else {
+        return res.status(500).json({message:"Couldnt updated the detauls due to Internal server error!"})
+    }
+})
 
-const acceptdoctor = async (req, res) => {
-  try {
-    const user = await User.findOneAndUpdate(
-      { _id: req.body.id },
-      { isDoctor: true, status: "accepted" }
-    );
+const getAllDoctors = asyncHandler ( async (req, res ) => {
+    const doctors = await Doctor.find().select('-password -email -refreshToken'); //exclude email and password
+    if(!doctors) return res.status(204).json({message:"No doctors found in the database!"});
+    res.json({doctors})
 
-    const doctor = await Doctor.findOneAndUpdate(
-      { userId: req.body.id },
-      { isDoctor: true }
-    );
+});
 
-    const notification = await Notification({
-      userId: req.body.id,
-      content: `Congratulations, Your application has been accepted.`,
-    });
 
-    await notification.save();
 
-    return res.status(201).send("Application accepted notification sent");
-  } catch (error) {
-    res.status(500).send("Error while sending notification");
-  }
-};
 
-const rejectdoctor = async (req, res) => {
-  try {
-    const details = await User.findOneAndUpdate(
-      { _id: req.body.id },
-      { isDoctor: false, status: "rejected" }
-    );
-    const delDoc = await Doctor.findOneAndDelete({ userId: req.body.id });
 
-    const notification = await Notification({
-      userId: req.body.id,
-      content: `Sorry, Your application has been rejected.`,
-    });
+const handleDoctorLogout = asyncHandler(async (req, res) => {
+    // Handle deletion of access token on client side
+    const cookies = req.cookies;
+    if (!cookies?.jwt) return res.status(204).json({ message: 'No content' }); // no content
+    const refreshToken = cookies.jwt;
 
-    await notification.save();
+    // Is the refreshToken in the database?
+    const foundDoctor = await Doctor.findOne({ refreshToken }).exec();
+    if (!foundDoctor) {
+        res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 100 });
+        return res.sendStatus(204);
+    }
 
-    return res.status(201).send("Application rejection notification sent");
-  } catch (error) {
-    res.status(500).send("Error while rejecting application");
-  }
-};
+    // Delete the refreshToken in the database
+    foundDoctor.refreshToken = foundDoctor.refreshToken.filter(token => token !== refreshToken);
+    const result = await foundDoctor.save();
+    console.log(result);
 
-const deletedoctor = async (req, res) => {
-  try {
-    const result = await User.findByIdAndUpdate(req.body.userId, {
-      isDoctor: false,
-    });
-    const removeDoc = await Doctor.findOneAndDelete({
-      userId: req.body.userId,
-    });
-    const removeAppoint = await Appointment.findOneAndDelete({
-      userId: req.body.userId,
-    });
-    return res.send("Doctor deleted successfully");
-  } catch (error) {
-    console.log("error", error);
-    res.status(500).send("Unable to delete doctor");
-  }
-};
+    // Clear the refreshToken cookie
+    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 100 });
+    res.sendStatus(204);
+});
 
-module.exports = {
-  getalldoctors,
-  getnotdoctors,
-  deletedoctor,
-  applyfordoctor,
-  acceptdoctor,
-  rejectdoctor,
-};
+
+
+
+
+
+module.exports = { doctorRegister, 
+    handleDoctorLogin, getAllDoctors, 
+     updateDoctor, 
+    handleDoctorLogout }
