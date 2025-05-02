@@ -30,3 +30,8 @@ This is a CRUD (Create, Read, Update, Delete) application built with MERN. The s
     Axios and React Query: Efficiently consume backend APIs for seamless data retrieval and manipulation.
     Tailwind CSS: Utilized for styling and enhancing the overall user experience.
 
+
+## Created by
+
+     Manuel Nieto Software Developer
+
