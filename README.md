@@ -33,5 +33,5 @@ This is a CRUD (Create, Read, Update, Delete) application built with MERN. The s
 
 ## Created by
 
-     Manuel Nieto Software Developer -- 2025
+     Manuel Nieto Software Developer --- 2025
 
