@@ -24,7 +24,7 @@ Git
 
 ## Installation
 
-Clone the repository:git clone <https://github.com/your-username/your-repo.git>
+Clone the repository:git clone <>
 
 Navigate to the project directory:cd your-repo
 
