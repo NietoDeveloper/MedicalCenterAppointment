@@ -35,6 +35,6 @@ Clone the repository:git clone <https://github.com/NietoDeveloper/MedicalCenterA
     Tailwind CSS: Utilized for styling and enhancing the overall user experience.
 
 
-## Created by
+## Created by  Manuel Nieto
 
- Manuel Nieto
+ ## NietoDeveloper
