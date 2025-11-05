@@ -57,7 +57,7 @@ const Header = () => {
         {/* Logo and Site Title */}
         <Link to="/" className="max-w-full flex items-center gap-1 cursor-pointer ">
           <FaHandHoldingMedical size={35} className="text-blue-600" />
-          <h1 className="md:text-2xl text-4xl">MediCare</h1>
+          <h1 className="md:text-2xl text-4xl">Medical Center</h1>
         </Link>
         
 
