@@ -1,18 +1,5 @@
 # Appointment_system
 
-A brief description of what your app does. Explain its purpose and key features in 2-3 sentences.
-Table of Contents
-
-Features
-Technologies Used
-Prerequisites
-Installation
-Usage
-Project Structure
-Available Scripts
-Contributing
-License
-
 Features
 
 Feature 1: Brief description of a key feature.
