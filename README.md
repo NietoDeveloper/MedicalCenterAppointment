@@ -37,5 +37,4 @@ Clone the repository:git clone <https://github.com/NietoDeveloper/MedicalCenterA
 
 ## Created by
 
-     Manuel Nieto Software Developer ---- 2025
-
+ Manuel Nieto
