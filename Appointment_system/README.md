@@ -1,12 +1,12 @@
 # Appointment_system
 
-Features
+## Features
 
 Feature 1: Brief description of a key feature.
 Feature 2: Brief description of another feature.
 Feature 3: Add more as needed.
 
-Technologies Used
+## Technologies Used
 
 React: Frontend library for building user interfaces.
 Node.js: Backend runtime for handling server-side logic.
