@@ -22,7 +22,7 @@ Node.js (v16.x or higher)
 npm (v8.x or higher) or Yarn
 Git
 
-Installation
+## Installation
 
 Clone the repository:git clone <https://github.com/your-username/your-repo.git>
 
