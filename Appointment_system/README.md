@@ -14,7 +14,7 @@ JavaScript: Core programming language.
 Tailwind CSS: Utility-first CSS framework for styling.
 Other dependencies: List any additional libraries or tools (e.g., Express, Axios).
 
-Prerequisites
+### Prerequisites
 Ensure you have the following installed:
 
 Node.js (v16.x or higher)
