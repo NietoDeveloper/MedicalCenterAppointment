@@ -22,7 +22,7 @@ const Footer = () => {
                         <li className="py-1">LinkendIn</li>
                         <li className="py-1">Instagram </li>
                     </ul>
-                <p>Copyright 2024 developed by Eliud</p>
+                <p>Copyright 202</p>
                 </div>
                 
             </div>
