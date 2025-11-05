@@ -30,4 +30,3 @@ Navigate to the project directory:cd your-repo
 
 Install dependencies for the backend:npm install
 
-Navigate to
