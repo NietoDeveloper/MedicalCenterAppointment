@@ -1,4 +1,4 @@
-Appointment_system
+# Appointment_system
 
 A brief description of what your app does. Explain its purpose and key features in 2-3 sentences.
 Table of Contents
