@@ -24,7 +24,7 @@ Git
 
 ## Installation
 
-Clone the repository:git clone <>
+Clone the repository:git clone <https://github.com/NietoDeveloper/MedicalCenterAppointment>
 
 Navigate to the project directory:cd your-repo
 
