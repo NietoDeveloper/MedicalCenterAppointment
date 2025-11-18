@@ -36,7 +36,6 @@ const Footer = () => {
           {/* Se ha movido el copyright a una sección inferior para mejor semántica */}
           <div className="flex flex-col items-start md:items-end">
             <h3 className="text-lg font-semibold mb-2 max-md:hidden">Créditos</h3>
-             {/* Este div está vacío en el original, lo eliminamos o lo llenamos con algo relevante si fuera necesario */}
           </div>
 
         </div> 
