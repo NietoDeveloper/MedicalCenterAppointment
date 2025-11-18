@@ -32,6 +32,9 @@ const Home = () => {
       <Guide/>
 
       <Questions/>
+
+      <Footer />
+
     </>
   );
 }
