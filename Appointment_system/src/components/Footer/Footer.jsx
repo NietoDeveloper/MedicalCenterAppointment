@@ -22,7 +22,17 @@ const Footer = () => {
                         <li className="py-1">LinkendIn</li>
                         <li className="py-1">Instagram </li>
                     </ul>
-                
+                <p className="text-center text-sm text-gray-600 dark:text-gray-400">
+  Copyright 2024 Created By{" "}
+  <a
+    href="https://manuelnieto.netlify.app/"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200 hover:underline transition-all duration-200 ease-in-out"
+  >
+    NietoDeveloper
+  </a>
+</p>
                 </div>
                 
             </div>
