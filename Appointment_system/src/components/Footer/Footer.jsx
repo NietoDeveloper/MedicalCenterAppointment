@@ -40,11 +40,10 @@ const Footer = () => {
           </div>
 
         </div> 
-        
-        {/* 2. Sección de Copyright separada para mejor semántica */}
+
         <div className="border-t border-gray-500 py-4"> 
             <p className="text-center text-sm text-gray-800 dark:text-gray-200">
-                Copyright 2024 Creado por{" "}
+                Copyright 2025 Creado por{" "}
                 <a
                     href="https://manuelnieto.netlify.app/"
                     target="_blank"
