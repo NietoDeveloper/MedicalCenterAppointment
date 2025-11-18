@@ -12,7 +12,7 @@ import PrivateRoutes from "./utils/PrivateRoutes";
 import DoctorProfile from "./pages/BookingPage";
 import Contact from "./pages/Contact";
 import Payment from "./components/Checkout/Payment";
-
+import Footer from "./components/Footer/Footer";
 
 function App() {
 
