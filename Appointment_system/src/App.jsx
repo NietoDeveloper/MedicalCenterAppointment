@@ -12,7 +12,6 @@ import PrivateRoutes from "./utils/PrivateRoutes";
 import DoctorProfile from "./pages/BookingPage";
 import Contact from "./pages/Contact";
 import Payment from "./components/Checkout/Payment";
-import Footer from "./components/Footer/Footer";
 
 function App() {
 
@@ -28,6 +27,7 @@ function App() {
       <Route path="/contact" element={<Contact/>}/>
       <Route path="/signup" element={<Signup/>}/>
       <Route path="/login" element={<Login/>}/>
+      
       
       <Route path="/doctor/signup" element={<Doctorsignup/>}/>
       <Route path="/doctor/login" element={<Doctorlogin/>}/>
