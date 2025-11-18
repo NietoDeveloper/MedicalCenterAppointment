@@ -5,14 +5,13 @@ import heroimage4 from '../../assets/images/feature-img.png';
 const Herosection = () => {
   return (
     <>
-      {/* hero content */}
       <div>
         <div>
           <h1
             className="text-[36px] leading-[36px]
                      text-gray-800  md:text-[60px] font-[600] md:leading-[70px]"
           >
-            We help patients lead a healthy, happy life
+            We lead a healthy
           </h1>
           <p className="text_para ">
             Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eius,
