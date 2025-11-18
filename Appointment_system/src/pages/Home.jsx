@@ -4,7 +4,7 @@ import Services from '../components/Offerings/Services';
 import Medcare from '../components/Preview/Medcare';
 import Questions from '../components/Faq/Questions';
 import Guide from '../components/Explainer/Guide';
-
+import Footer from "../components/Footer/Footer";
 
 
 const Home = () => {
