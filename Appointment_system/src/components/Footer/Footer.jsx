@@ -13,7 +13,7 @@ const Footer = () => {
           {/* Columna 1: Información de Contacto / Servicios */}
           <div className="flex flex-col">
             <h3 className="text-lg font-semibold mb-2">Información</h3>
-            <ul className="space-y-1"> {/* Simplificado con 'space-y' en lugar de 'pb-1'/'py-1' */}
+            <ul className="space-y-1">
               <li>Doctor</li>
               <li>Services</li>
               <li>Contact Us</li>
