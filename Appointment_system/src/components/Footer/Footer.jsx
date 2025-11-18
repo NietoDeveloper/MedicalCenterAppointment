@@ -21,7 +21,6 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Columna 2: Redes Sociales (Oculta en móviles - max-md:hidden) */}
           <div className="flex flex-col items-start max-md:hidden">
             <h3 className="text-lg font-semibold mb-2">Síguenos</h3>
             <ul className="space-y-1">
