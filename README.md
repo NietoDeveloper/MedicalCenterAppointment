@@ -19,5 +19,4 @@ Clone the repository:git clone <https://github.com/NietoDeveloper/MedicalCenterA
 
 ## Technology Stack
 
-## Backend
 
