@@ -28,7 +28,6 @@ PIs.
     Redux: Manages session data such as user profiles and authentication status.
     Axios and React Query: Efficiently consume backend APIs for styling and enhancing the overall user experience.
 
-## Created by  Manuel Nieto
 
 ## NietoDeveloper
 
