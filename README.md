@@ -13,4 +13,4 @@ Clone the repository:git clone <https://github.com/NietoDeveloper/MedicalCenterA
 
     Profile Management: Users can upload a profile picture, and doctors can showcase their experience, specialization, and availability for appointments.
 
-    Appointment Booking: Users can book appointments with their preferred doctors and view/manage their up
+    Appointment Booking: Users can book appointments with their preferred doctors and view/
