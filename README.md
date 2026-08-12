@@ -23,8 +23,7 @@ Clone the repository:git clone <https://github.com/NietoDeveloper/MedicalCenterA
 
     Node.js/Express: Handles server-side logic and provides RESTful APIs for frontend interaction.
     MongoDB: Utilized as the database to store user accounts, doctor profiles, appointments, and reviews.
-
-    React: Builds the user interface to interact with the backend APIs.
+PIs.
     React Router: Provides route protection and navigation within the application.
     Redux: Manages session data such as user profiles and authentication status.
     Axios and React Query: Efficiently consume backend APIs for seamless data retrieval and manipulation.
