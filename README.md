@@ -16,7 +16,3 @@ Clone the repository:git clone <https://github.com/NietoDeveloper/MedicalCenterA
     Appointment Booking: Users can book appointments with their preferred doctors and view/manage their upcoming appointments.
 
     Review System: Users can leave reviews for doctors, allowing others to make informed decisions when choosing a doctor.
-
-## Technology Stack
-
-
