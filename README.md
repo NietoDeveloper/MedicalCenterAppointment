@@ -21,5 +21,3 @@ Clone the repository:git clone <https://github.com/NietoDeveloper/MedicalCenterA
 
 ## Backend
 
-    Node.js/Express: Handles server-side logic and provides RESTful APIs for frontend interaction.
-    MongoDB: Utilized as the database to store user 
