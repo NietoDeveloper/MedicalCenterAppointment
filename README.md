@@ -11,4 +11,4 @@ Clone the repository:git clone <https://github.com/NietoDeveloper/MedicalCenterA
 
     Authorization: Implements role-based authorization to ensure that only authenticated users and doctors can access their respective functionalities.
 
-    Profile Management: Users can upload a profile picture, and doctors can showcase their experience, 
+  can showcase their experience, 
