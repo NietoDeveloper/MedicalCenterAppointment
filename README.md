@@ -26,8 +26,7 @@ Clone the repository:git clone <https://github.com/NietoDeveloper/MedicalCenterA
 PIs.
     React Router: Provides route protection and navigation within the application.
     Redux: Manages session data such as user profiles and authentication status.
-    Axios and React Query: Efficiently consume backend APIs for seamless data retrieval and manipulation.
-    Tailwind CSS: Utilized for styling and enhancing the overall user experience.
+    Axios and React Query: Efficiently consume backend APIs for styling and enhancing the overall user experience.
 
 ## Created by  Manuel Nieto
 
