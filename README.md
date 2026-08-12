@@ -25,4 +25,3 @@ Clone the repository:git clone <https://github.com/NietoDeveloper/MedicalCenterA
     MongoDB: Utilized as the database to store user accounts, doctor profiles, appointments, and reviews.
 PIs.
     React Router: Provides route protection and navigation within the application.
-    Redux: Manages session data such as user profiles and authentication status.
