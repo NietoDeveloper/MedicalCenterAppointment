@@ -7,5 +7,4 @@ Clone the repository:git clone <https://github.com/NietoDeveloper/MedicalCenterA
 
 ## Features
 
-    User Authentication: Supports secure user authentication using JWT (JSON Web Tokens). Users and doctors can securely log in with multiple devices, and logging out on one device does not affect their session on other devices.
-Implements role-based authorization to 
+    User Authentication: Supports secure user authentication using JWT (JSON Web Tokens). Users and doctors can securely log in with multiple devices, and logging out on one device does not affect their session on other sed authorization to 
