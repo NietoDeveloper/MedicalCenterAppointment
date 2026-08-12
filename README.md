@@ -28,7 +28,6 @@ Clone the repository:git clone <https://github.com/NietoDeveloper/MedicalCenterA
 
 ## Frontend
 
-
     React: Builds the user interface to interact with the backend APIs.
     React Router: Provides route protection and navigation within the application.
     Redux: Manages session data such as user profiles and authentication status.
