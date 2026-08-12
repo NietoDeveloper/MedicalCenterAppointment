@@ -26,9 +26,6 @@ Clone the repository:git clone <https://github.com/NietoDeveloper/MedicalCenterA
 PIs.
     React Router: Provides route protection and navigation within the application.
     Redux: Manages session data such as user profiles and authentication status.
-    Axios and React Query: Efficiently consume backend APIs for styling and enhancing the overall user experience.
-
-
-## NietoDeveloper
+    Axios and React Query: Efficiently consume backend APIs 
 
 ### 2025
