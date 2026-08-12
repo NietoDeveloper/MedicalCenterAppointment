@@ -7,4 +7,4 @@ Clone the repository:git clone <https://github.com/NietoDeveloper/MedicalCenterA
 
 ## Features
 
-    User Authentication: Supports secure user authentication using JWT (JSON Web Tokens). Users and doctors can securely log in with multging out 
+    User Authentication: Supports secure user authentication 
